@@ -1,0 +1,8 @@
+import {hero,count,consume,professionXP,addItem,save} from '../core/state.js';
+import {RECIPES,PROCESSING_RECIPES} from '../core/data.js';
+export function knownRecipe(c,r){return (c.knownRecipes||[]).includes(r.id)}
+export function craft(r){let c=hero();if(!r||!knownRecipe(c,r))return 'Ukendt opskrift';let p=c.professions[r.profession];if((r.level||0)>p.level)return 'Profession level for lavt';if(r.requires?.some(x=>!c.camp.includes(x)))return 'Mangler camp upgrade';if(Object.entries(r.cost).some(([k,v])=>count(c,k)<v))return 'Mangler materialer';for(let [k,v] of Object.entries(r.cost))consume(c,k,v);professionXP(c,r.profession);if(r.slot){c.gear[r.slot]={name:r.name,bonus:r.bonus||{},durability:100}}else if(r.profession==='Camper'){if(!c.camp.includes(r.id))c.camp.push(r.id);if(r.id==='furnace'&&!c.knownRecipes.includes('process_iron'))c.knownRecipes.push('process_iron')}else if(r.id==='hpotion')c.hp=Math.min(100+(c.level-1)*5,c.hp+20);else if(r.id==='cpotion')c.charges++;save();return 'Crafted: '+r.name}
+export function canCraft(r){let c=hero();return !!r&&knownRecipe(c,r)&& c.professions[r.profession].level>=(r.level||0)&&!r.requires?.some(x=>!c.camp.includes(x))&&Object.entries(r.cost).every(([k,v])=>count(c,k)>=v)}
+
+export function canProcess(r){const c=hero();return !!r&&(c.knownRecipes||[]).includes(r.id)&&!r.requires?.some(x=>!c.camp.includes(x))&&Object.entries(r.input).every(([k,v])=>count(c,k)>=v)}
+export function processMaterial(r){const c=hero();if(!canProcess(r))return 'Mangler materialer, opskrift eller furnace';for(const [k,n] of Object.entries(r.input))consume(c,k,n);for(const [k,n] of Object.entries(r.output))addItem(c,k,n);save();return 'Processed: '+r.name}

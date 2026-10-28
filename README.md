@@ -31,3 +31,19 @@ Then open `http://localhost:8000/main.html` in a browser. To use real GPS on a p
 - The 25-slot bag is a visual 5×5 representation; item quantities are not yet capped.
 - Loot handling and death drop are simplified; the one-hour debuff is stored but has no gameplay penalty.
 - Local data can be lost if browser site storage is cleared; it is not backed up.
+
+## v1.2 changes
+- GPS is requested automatically on first map visit (HTTPS required); location updates do not forcibly re-center a map being browsed. The Aarhus coordinate is fallback only.
+- Hunting attempt counter is stored per active encounter and reset to three for each newly opened prey.
+- Tap ⓘ on talents, abilities, stats, skills, and equipped gear for descriptions and bonuses. Some effects without specified numerical details are explicitly identified.
+- Encounter levels appear on map markers, lists and encounter screens.
+
+
+## v1.3 changes
+- Hunting resets three attempts per new prey (bug fixed).
+- HP persists across combats; only Camp Rest and explicit healing restore HP.
+- Character XP requirement doubled; skill/profession XP unchanged pending clarification.
+- Level-up popup; floating combat damage/healing over affected target, no battle log under combat.
+- Crafting shows only learned recipes, with craftable recipes first.
+- Processing tab in Crafting. Craft Iron Furnace to learn Raw Iron → Processed Iron (1:1); iron-based gear and camp recipes use Processed Iron.
+- Existing character localStorage is retained; new recipes are not automatically revealed.
