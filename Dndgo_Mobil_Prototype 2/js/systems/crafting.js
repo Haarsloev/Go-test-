@@ -1,4 +1,0 @@
-import {hero,count,consume,professionXP,addItem,save} from '../core/state.js';
-import {RECIPES} from '../core/data.js';
-export function craft(r){let c=hero(),p=c.professions[r.profession];if((r.level||0)>p.level)return 'Profession level for lavt';if(r.requires?.some(x=>!c.camp.includes(x)))return 'Mangler camp upgrade';if(Object.entries(r.cost).some(([k,v])=>count(c,k)<v))return 'Mangler materialer';for(let [k,v] of Object.entries(r.cost))consume(c,k,v);professionXP(c,r.profession);if(r.slot){c.gear[r.slot]={name:r.name,bonus:r.bonus||{},durability:100}}else if(r.profession==='Camper'){if(!c.camp.includes(r.id))c.camp.push(r.id)}else if(r.id==='hpotion')c.hp=Math.min(100+(c.level-1)*10,c.hp+20);else if(r.id==='cpotion')c.charges++;save();return 'Crafted: '+r.name}
-export function canCraft(r){let c=hero();return c.professions[r.profession].level>=(r.level||0)&&!r.requires?.some(x=>!c.camp.includes(x))&&Object.entries(r.cost).every(([k,v])=>count(c,k)>=v)}
